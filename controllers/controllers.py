@@ -1,10 +1,21 @@
 # -*- coding: utf-8 -*-
 from odoo import http
+from odoo import models
+import json
+import base64
 
-# class Telegram(http.Controller):
-#     @http.route('/telegram/telegram/', auth='public')
-#     def index(self, **kw):
-#         return "Hello, world"
+class Telegram(http.Controller):
+     @http.route('/api/telegram/', auth='user', type='json', methods=['POST'], csrf=False)
+     def index(self, file, telegram_id):
+        encode_file = base64.b64encode(file)
+        partners = http.request.env['res.partner']
+        partner = partners.search([('telegram_chat_id','=', telegram_id)])
+
+        if partner:
+            return {"response": "OK"}
+        else:
+            return {"telegram_id": "ERROR"}
+
 
 #     @http.route('/telegram/telegram/objects/', auth='public')
 #     def list(self, **kw):
